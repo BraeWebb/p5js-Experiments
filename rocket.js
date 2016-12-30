@@ -10,7 +10,7 @@ function setup(){
         new Target(random(0, width), random(0, height)),
         new Target(random(0, width), random(0, height))
     ];
-    for(var i = 0; i < 100; i++){
+    for(var i = 0; i < 15; i++){
         rs.push(new Rocket(random(0, width), random(0, height), targets[floor(random(0, 6))]));
     }
     print(rs);
@@ -33,11 +33,10 @@ var Rocket = function(x, y, target){
     this.acceleration = 0;
     this.velocity = createVector();
     this.speed = 0.001;
+    this.sparks = [];
 
     this.draw = function(){
         push();
-        //noStroke();
-        //fill(255, 150);
         translate(this.x, this.y);
         rotate(p5.Vector.angleBetween(createVector(this.x, this.y), createVector(this.target.x, this.target.y)));
         rectMode(CENTER);
@@ -52,7 +51,51 @@ var Rocket = function(x, y, target){
             var dy = this.target.y - this.y;
             this.y += dy * this.acceleration;
         }
+        angleMode(DEGREES);
+        var spark = new Sparks(this.x, this.y, [0, 360], random(1, 5), 5);
+        this.sparks.push(spark);
+        for(var s in this.sparks){
+            this.sparks[s].draw();
+        }
+        if(this.sparks.length >= 15){
+            this.sparks.shift();
+        }
     }
+};
+
+
+var Sparks = function(x, y, range, force, intensity){
+    this.location = createVector(x, y);
+    this.particles = [];
+    var colour = [random(0, 255), random(0, 255), random(0, 255)];
+    for(var i = 0; i <= intensity; i++){
+        var particle = new Particle(x, y, colour, force, floor(random(range[0], range[1])));
+        this.particles.push(particle);
+    }
+
+    this.velocity = createVector();
+
+    this.draw = function(){
+        for(var p in this.particles){
+            var particle = this.particles[p];
+            particle.move();
+            noStroke();
+            fill.apply(null, particle.color);
+            ellipse(particle.location.x, particle.location.y, 3, 3);
+            fill(255);
+        }
+    };
+};
+
+var Particle = function(x, y, color, speed, direction){
+    this.location = createVector(x, y);
+    this.color = color;
+    this.velocity = createVector(speed * cos(direction), speed * sin(direction));
+
+
+    this.move = function(){
+        this.location.add(this.velocity);
+    };
 };
 
 var Target = function(x, y){
