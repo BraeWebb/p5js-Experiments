@@ -4,3 +4,4 @@ A project that will contain experiments written with the intention of learning t
 
 These experiments include:
 - A Hexagon Recursive Backtracker Maze Generator
+- A Rocket Visualization
