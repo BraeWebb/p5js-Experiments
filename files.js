@@ -5,8 +5,12 @@ var FILES = [
     },
     {
         "file": "rocket",
-        "title": "Rocket Game"
+        "title": "Rocket Visualization"
+    },
+    {
+        "file": "3dpicture",
+        "title": "3D Picture"
     }
 ];
 
-var WORKING = FILES[1];
+var WORKING = FILES[2];
