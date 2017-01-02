@@ -5,17 +5,118 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.5/p5.min.js"></script>
     <script src="array_ext.js"></script>
     <script src="files.js"></script>
-    <script src="3dpicture.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script>
-        document.title = WORKING.title;
+        $(document).ready(function(){
+            if(!launch()) {
+                var option = '';
+                for (var i in FILES) {
+                    var file = FILES[i];
+                    option += '<option value="' + file.file + '">' + file.title + '</option>';
+                }
+                var list = $('.experiment-list');
+                list.append($(option));
+                list.change(updateConfig);
+                updateConfig();
+            }
+            // Remove non-empty field before submitting
+            // Credit to Rashmin Javiya: http://stackoverflow.com/questions/23532729/submit-only-non-empty-fields-from-form
+            $(document).ready(function(){
+                $("form").submit(function(){
+                    $("input").each(function(index, obj){
+                        if($(obj).val() == "") {
+                            $(obj).remove();
+                        }
+                    });
+                });
+            });
+        });
+
+        function updateConfig(){
+            var item = $('.experiment-list').val();
+            var data = FILES[item];
+            var list = $('#config');
+            list.empty();
+            for(var key in data.config){
+                var form = $("<div class='form-group'>");
+                form.append($("<label for='"+key+"'>"+key.replace("_", " ")+"</label>"));
+                form.append($("<input type='text' id='"+key+"' name='"+key+"' class='form-control' placeholder='"+data.config[key][0]+"'>"));
+                list.append(form);
+            }
+            $("#config-form").attr("action", "#" + data.file);
+        }
+
+        function launch(){
+            var place = window.location.href;
+            if(place.search("#") >= 0){
+                if(place.split("#")[1].length > 1){
+                    var file = FILES[place.split("#")[1]];
+                    $.getScript(file.file + ".js", function(data, textStatus, jqxhr){
+                        document.body.innerHTML = '';
+                        document.title = file.title;
+                        new p5();
+                    });
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function loadConfig(){
+            var file = FILES[window.location.href.split("#")[1]];
+            for(var key in file.config){
+                if(getQueryVariable(key)){
+                    if(file.config[key][1]){
+                        window[key] = eval(getQueryVariable(key));
+                    }else{
+                        window[key] = getQueryVariable(key);
+                    }
+                }
+                else{
+                    if(file.config[key][1]){
+                        window[key] = eval(file.config[key][0]);
+                    }else{
+                        window[key] = file.config[key][0];
+                    }
+                }
+            }
+        }
+
+        function getQueryVariable(variable)
+        {
+            // Credit to Chris Coyier: https://css-tricks.com/snippets/javascript/get-url-variables/
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
     </script>
     <style>
         body{
-            margin: 0px;
+            margin: 0;
             overflow: hidden;
         }
+        #config {
+            text-transform:capitalize;
+        }
     </style>
+    <title>P5JS Experiments</title>
 </head>
 <body>
+    <div class="jumbotron container">
+        <h1>P5JS Experiments</h1>
+        <select class="experiment-list form-control">
+        </select><br/>
+        <form id="config-form" action="#">
+        <div id="config">
+
+        </div>
+        <br />
+        <input id="launch" class="btn btn-success btn-block" type="submit" value="Launch" />
+        </form>
+    </div>
 </body>
 </html>

@@ -2,23 +2,12 @@
 var img;
 var pixels = [];
 
-// Configuration variables - set in preload
-var detail;
-var sortFunc;
-var scale;
-
-
 function preload() {
-    // The image to use. NOTE: the files need to be on a webserver to allow this
-    var imgName = "example.jpg";
-    // Whether the image is detailed
-    detail = true;
-    // The scale of the image
-    scale = 5;
-    // The function used to place pixels in the z axis
-    sortFunc = function(pixel) {return -brightness(pixel);};
+    loadConfig();
+    image_name = decodeURIComponent(image_name);
+    sort_function = eval(decodeURIComponent(sort_function));
 
-    img = loadImage(imgName);
+    img = loadImage(image_name);
 }
 
 function setup() {
@@ -29,7 +18,7 @@ function setup() {
     img.loadPixels();
     for (var x = 0; x < img.width; x++) {
         for (var y = 0; y < img.height; y++) {
-            var pixel = [x, y, sortFunc(img.get(x, y)), img.get(x, y)];
+            var pixel = [x, y, sort_function(img.get(x, y)), img.get(x, y)];
             pixels.push(pixel);
         }
     }
@@ -39,7 +28,7 @@ function draw(){
     // Allow the 3D image to be rotated
     orbitControl();
     // Position the image in the center of the screen
-    translate(-img.width*scale/2, -img.height*scale/2);
+    translate(-img.width*image_scale/2, -img.height*image_scale/2);
     // Draw each pixel as a shape
     beginShape();
     for (var b in pixels) {
@@ -52,16 +41,16 @@ function drawPixel(pixel){
     // Colour the pixel the appropriate colour
     fill(pixel[3]);
     // Calculate the scaled x, y and z locations of the pixel
-    var x = pixel[0] * scale;
-    var y = pixel[1] * scale;
+    var x = pixel[0] * image_scale;
+    var y = pixel[1] * image_scale;
     var z = pixel[2];
     // Draw the initial pixel
     vertex(x,y,z);
     if(detail){
         // If a detailed pixel is used then add more vertexes forming a square
-        vertex(x+scale,y,z);
-        vertex(x+scale,y+scale,z);
-        vertex(x,y+scale,z);
+        vertex(x+image_scale,y,z);
+        vertex(x+image_scale,y+image_scale,z);
+        vertex(x,y+image_scale,z);
         vertex(x,y,z);
     }
 }

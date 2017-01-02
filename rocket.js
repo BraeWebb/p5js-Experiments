@@ -1,31 +1,15 @@
 // List of rockets loaded into the game
 var rs = [];
 
-// Configuration variables - set in setup
-var background_color;
-var rocket_dimensions;
-var hit_radius;
-var spark_limit;
+function preload(){
+    loadConfig();
+    // Format the rocket dimensions into an array
+    rocket_dimensions = eval("[" + decodeURIComponent(rocket_dimensions).replace('%2C', ',') + "]");
+}
 
 function setup() {
     // Create a full page canvas
     createCanvas(window.innerWidth, window.innerHeight);
-    // Amount of Targets to generate
-    var target_count = 25;
-    // Amount of Rockets to generate
-    var rocket_count = 30;
-    // Background Colour
-    background_color = color(0);
-    // Speed of the rockets
-    var rocket_speed = 1.05;
-    // Dimensions of the rockets
-    rocket_dimensions = [0, 0, 20, 2];
-    // Radius of a rocket to a target to be a hit
-    hit_radius = 10;
-    // Amount of Sparks attached to a rocket at a given time
-    spark_limit = 15;
-    // The class of the target (change to MouseTarget to target the mouse)
-    var target_class = RandomTarget;
 
     // Generate Targets at random positions
     var targets = [];

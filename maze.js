@@ -1,27 +1,20 @@
 var g;
 
+function preload(){
+    loadConfig();
+}
+
 function setup(){
     createCanvas(window.innerWidth, window.innerHeight);
-    //createCanvas(600, 600);
     frameRate(60);
-    g = new Grid(40, 1);
+    g = new Grid(hexagon_size, pointer_count);
 }
 
 function draw(){
-    stroke(255);
-    background(51);
+    stroke(foreground_color);
+    background(background_color);
     g.draw();
 }
-
-window.onresize = function() {
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    canvas.size(w,h);
-    setup();
-    width = w;
-    height = h;
-};
-
 
 var Grid = function(size, pointers){
     var w = size*2;
@@ -54,11 +47,13 @@ var Grid = function(size, pointers){
         for(var p in this.pointers){
             var pointer = this.pointers[p];
             if(pointer.current){
-                for(var p in pointer.visited){
-                    var place = pointer.visited[p];
-                    ellipse(place.x, place.y, 5);
+                if(leave_breadcrumbs) {
+                    for (var p in pointer.visited) {
+                        var place = pointer.visited[p];
+                        ellipse(place.x, place.y, 5);
+                    }
                 }
-                ellipse(pointer.current.x, pointer.current.y, 15);
+                ellipse(pointer.current.x, pointer.current.y, pointer_size);
                 pointer.move();
             }
 
@@ -81,9 +76,9 @@ var Hexagon = function(g, x, y, i, j){
 
     this.draw = function(){
         if (this.visited){
-            stroke(255);
+            stroke(foreground_color);
         }else{
-            stroke(55);
+            stroke(shadow_color);
         }
         drawHexagon(this.x, this.y, g.w/2, this.sides);
     };
