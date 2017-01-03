@@ -36,5 +36,24 @@ var FILES = {
                 //"sort_function": ["function(pixel) {return -brightness(pixel);}", true]
                 "sort_function": ["brightness", false]
             }
+        },
+        "dotter": {
+            "file": "dotter",
+            "title": "Dotter",
+            "config": {
+                "dot_count": [500, true],
+                "dot_limit": [750, true],
+                "respawn_amount": [2, true],
+                "size_limit": [30, true],
+                "line_count": [5, true],
+                "dot_size": [10, true],
+                "scatter_range": [1, true],
+                "scatter_probability": [0.2, true],
+                "resize_probability": [0.01, true],
+                "resize_range": [10, true],
+                "mouse_radius": [200, true],
+                "background_color": ["color(51)", true],
+                "foreground_color": ["color(255)", true]
+            }
         }
     };
