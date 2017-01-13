@@ -5,7 +5,7 @@ var pixels = [];
 function preload() {
     loadConfig();
     image_name = decodeURIComponent(image_name);
-    sort_function = eval(decodeURIComponent(sort_function));
+    sort_function = eval(decodeURIComponent(sort_function).replace(/%20/g, ' '));
 
     img = loadImage(image_name);
 }

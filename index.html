@@ -24,8 +24,11 @@
             $(document).ready(function(){
                 $("form").submit(function(){
                     $("input").each(function(index, obj){
-                        if($(obj).val() == "") {
-                            $(obj).remove();
+                        obj = $(obj);
+                        obj.val(obj.val().replace(/ /g, '%20'));
+                        console.log(obj);
+                        if(obj.val() == "") {
+                            obj.remove();
                         }
                     });
                 });

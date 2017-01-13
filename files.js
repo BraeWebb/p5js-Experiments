@@ -33,8 +33,7 @@ var FILES = {
                 "image_name": ["example.jpg", false],
                 "detail": [true, true],
                 "image_scale": [5, true],
-                //"sort_function": ["function(pixel) {return -brightness(pixel);}", true]
-                "sort_function": ["brightness", false]
+                "sort_function": ["(pixel) => {return -brightness(pixel)}", false]
             }
         },
         "dotter": {
